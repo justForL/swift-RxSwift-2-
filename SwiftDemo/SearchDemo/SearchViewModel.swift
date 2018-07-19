@@ -36,16 +36,19 @@ class SearchViewModel: SearchViewModelProtocol,SearchViewModelInputProtocol,Sear
         self.searchBtnTap = PublishSubject<Void>()
         self.searchText =  PublishSubject<String>()
         
+        let param = Driver.combineLatest([self.searchText.asDriver(onErrorJustReturn: "")]){ ($0)  }
         // 绑定
         self.data = self.searchBtnTap.asDriver(onErrorJustReturn: ())
-            .flatMapLatest{ searchText in
+            .withLatestFrom(param)
+            .flatMapLatest{(searchString) in
+                print(searchString);
                 return Observable.from([1,2,3,4,5,6]).toArray().asDriver(onErrorJustReturn: []).delay(2);  //模拟网络请求
         }
         
-        self.data = self.searchText.asDriver(onErrorJustReturn: "请重新输入")
-            .flatMapLatest{ searchText in
-                return Observable.from([1,2,3,4,5,6]).toArray().asDriver(onErrorJustReturn: []).delay(2);  //模拟网络请求
-        }
+//        self.data = self.searchText.asDriver(onErrorJustReturn: "请重新输入")
+//            .flatMapLatest{ searchText in
+//                return Observable.from([1,2,3,4,5,6]).toArray().asDriver(onErrorJustReturn: []).delay(2);  //模拟网络请求
+//        }
     }
     
     

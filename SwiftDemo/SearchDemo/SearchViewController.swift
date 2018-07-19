@@ -24,6 +24,7 @@ class SearchViewController: UIViewController {
         inputTF.rx.text.orEmpty
             .distinctUntilChanged()
             .bind(to: viewModel.input.searchText)
+            
             .disposed(by: disposeBag);
     
         searchBtn.rx.tap
